@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.pipeworx-io/abs-loan-level",
   "title": "Abs Loan Level",
-  "description": "ABS-EE (Reg AB II) trust-level rollups — auto loan / auto lease",
-  "version": "0.1.2",
+  "description": "ABS-EE (Reg AB II) trust-level rollups — auto loan / auto lease securitization delinquency, by…",
+  "version": "0.1.3",
   "websiteUrl": "https://pipeworx.io/packs/abs-loan-level",
   "repository": {
     "url": "https://github.com/pipeworx-io/mcp-abs-loan-level",
