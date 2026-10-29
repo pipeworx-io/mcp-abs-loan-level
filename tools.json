@@ -1,0 +1,84 @@
+[
+  {
+    "name": "abs_trusts",
+    "description": "List US auto loan / auto lease securitization trusts we track (from SEC EDGAR Reg AB II ABS-EE filings), optionally filtered by sponsor (captive-finance company / depositor, e.g. \"Ally\", \"Toyota\") or asset class. Use to find the exact trust name abs_trust_performance needs, or to see which sponsors/asset classes have coverage.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sponsor": {
+          "type": "string",
+          "description": "Case-insensitive substring match on the sponsor/depositor name, e.g. \"Ally\", \"CarMax\", \"Exeter\", \"BMW\"."
+        },
+        "asset_class": {
+          "type": "string",
+          "description": "Filter to one asset class.",
+          "enum": [
+            "auto_loan",
+            "auto_lease"
+          ]
+        },
+        "limit": {
+          "type": "number",
+          "description": "Max trusts to return. Default 50, max 500.",
+          "default": 50,
+          "minimum": 1,
+          "maximum": 500
+        }
+      }
+    }
+  },
+  {
+    "name": "abs_trust_performance",
+    "description": "Delinquency-bucket performance history for ONE named securitization trust over its most recent N reporting months — loan count, balance, weighted-average APR and FICO per bucket (current / 1-29 / 30-59 / 60-89 / 90+ days past due / repossessed / charged-off). Use for \"how is Ally Auto Receivables Trust 2024-2 performing?\" or to track one deal's delinquency trend month over month. Get the exact trust name from abs_trusts first.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "trust": {
+          "type": "string",
+          "description": "Exact trust display name, e.g. \"Ally Auto Receivables Trust 2024-2\". Case-sensitive exact match — look it up via abs_trusts if unsure."
+        },
+        "months": {
+          "type": "number",
+          "description": "Number of most-recent reporting months to return. Default 12, max 36.",
+          "default": 12,
+          "minimum": 1,
+          "maximum": 36
+        }
+      },
+      "required": [
+        "trust"
+      ]
+    }
+  },
+  {
+    "name": "abs_sector_delinquency",
+    "description": "Sector-wide auto ABS delinquency by month, aggregated across every tracked trust in one asset class — e.g. \"60+ day delinquency across subprime auto trusts this month\". Returns one row per reporting month with total balance/loan count, the full delinquency-bucket breakdown, sector weighted-average APR/FICO, and a 60+ days-past-due rate. Optionally narrow to trusts from one sponsor/originator (captive-finance company, e.g. \"Ally\", \"Toyota\", \"Santander\") — most auto ABS trusts are single-originator so this is a trust-level filter, not a per-loan lender lookup; there is no loan-level \"which trusts hold loans from lender X\" query (that needs data this pack deliberately does not keep — see the pack header).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_class": {
+          "type": "string",
+          "description": "Which ABS sector to aggregate.",
+          "enum": [
+            "auto_loan",
+            "auto_lease"
+          ]
+        },
+        "months": {
+          "type": "number",
+          "description": "Number of most-recent reporting months to return. Default 12, max 36.",
+          "default": 12,
+          "minimum": 1,
+          "maximum": 36
+        },
+        "originator": {
+          "type": "string",
+          "description": "Optional case-insensitive substring filter on the trust's sponsor/depositor name (e.g. \"Ally\", \"GM Financial\")."
+        }
+      },
+      "required": [
+        "asset_class"
+      ]
+    }
+  }
+]
